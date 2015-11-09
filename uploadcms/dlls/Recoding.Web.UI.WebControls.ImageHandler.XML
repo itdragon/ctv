@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Recoding.Web.UI.WebControls.ImageHandler</name>
+    </assembly>
+    <members>
+        <member name="T:Recoding.Web.UI.WebControls.ImageHandler">
+            <summary>
+            Asp.Net custom control to use in a WebForms application.
+            </summary>
+        </member>
+        <member name="M:Recoding.Web.UI.WebControls.ImageHandler.AddAttributesToRender(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Manage the attributes to render on the img tag
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Recoding.Web.UI.WebControls.ImageHandler.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.AlternateText">
+            <summary>
+            A text to assign to the image
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.CornerRadius">
+            <summary>
+            Pixel radius of rounded corner, set to 0 to disable
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.DefaultImageUrl">
+            <summary>
+            Fallback image if ImageUrl refers invalid path
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.EncryptUrls">
+            <summary>
+            Specify if the Urls of images must be encrypted, requires web.config section. See documentation for details
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.EnableCaching">
+            <summary>
+            Specify if images must be cached after process. See documentation for details
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.FlipType">
+            <summary>
+            Select a way to flip image
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.ImageEffect">
+            <summary>
+            Select the effect to apply on image (after watermark, but before the round corner)
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.ImageUrl">
+            <summary>
+            Url of the image to process
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.HorizontalAlign">
+            <summary>
+            For cropped image, specify the horizontal alignement of visible parts.
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.WatermarkUrl">
+            <summary>
+            Url of the watermark to apply on the image
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.WatermarkPosition">
+            <summary>
+            Position of watermark in the visible area
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.ProcessType">
+            <summary>
+            Select between scale and crop process.
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.Rotate">
+            <summary>
+            Select the amount of rotation
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.UI.WebControls.ImageHandler.VerticalAlign">
+            <summary>
+            For cropped image, specify the vertical alignement of visible parts.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutLoginPage.cshtml";
+}
+@section META_INC
+{
+    <title>@Html.Raw(ViewBag.titlePage)</title>
+    <meta name="keywords" content="@Html.Raw(ViewBag.MetaKeywords)" />
+    <meta name="description" content="@Html.Raw(ViewBag.MetaDescription)" />
+}
+
+@section CSS_INC
+{
+    
+}
+@section JS_INC
+{
+    <script src="~/Scripts/jquery.newshome.js?v=@(cms.business.ConfigHelper.StaticContentVersion())"></script>
+    <script src="~/Scripts/NewsDetail.min.js?v=@(cms.business.ConfigHelper.StaticContentVersion())"></script>
+    <script src="~/Scripts/LoginUser.min.js?v=@(cms.business.ConfigHelper.StaticContentVersion())"></script>
+}
+<div id="fb-root"></div>
+
+<input type="hidden" value="215" id="hfCatID" />
+
+<div class="main-left-wrapper" style="vertical-align: bottom; width: 50%;">
+    @*<div class="img-left"></div>*@
+    <div class="containpresentpage">
+        <div class="title">Kết nối với cộng đồng công nghệ số 1 Việt Nam với hơn @ViewBag.CountForumMember thành viên năng động.</div>
+        <div class="containsubpresent">
+            <div class="present">
+                <div class="iconworld"></div>
+                <div class="titlepresent">Tham gia cộng đồng tư vấn, chia sẻ công nghệ</div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="present">
+                <div class="icontakepic"></div>
+                <div class="titlepresent">Chia sẻ hình ảnh, cảm nhận, trải nghiệm bản thân</div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="present">
+                <div class="iconnewsnew"></div>
+                <div class="titlepresent">Cập nhật nhanh công nghệ mới</div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="present">
+                <div class="icontransport"></div>
+                <div class="titlepresent">Theo dõi đơn hàng</div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="present">
+                <div class="iconpointsbonus"></div>
+                <div class="titlepresent">Tích lũy điểm thưởng</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-right-wrapper" style="vertical-align: bottom; width: 40%;">
+    <div class="loginform">
+        <div class="titleLogin">Thành viên đăng nhập</div>
+        <div class="contentloginform">
+            <div class="containelement">
+                <input type="text" placeholder="Email/Số điện thoại" class="inputtext" id="txtemailpr" onkeypress="CheckLogin(event);" value="hinbatherhin@gmail.com" /><span> (*)</span>
+            </div>
+            <div class="containelement">
+                <input type="password" placeholder="Mật khẩu" class="inputtext" id="txtpasswordlogin" onkeypress="CheckLogin(event);" /><span> (*)</span>
+            </div>
+            <div class="containelement">
+                <input type="checkbox" checked="checked" class="loginbtn" />
+                <div class="titlerememberpass">Ghi nhớ mật khẩu</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="buttonlogin">
+                <input type="button" id="btnLogin" class="btn" value="ĐĂNG NHẬP" onclick="LoginFunction()" />
+            </div>
+            <div class="other">
+                <div class="forgetpasss">
+                    <a href="/ctv/quen-mat-khau">Bạn quên mật khẩu?</a>
+                </div>
+                <div class="signup">
+                    Bạn chưa có tài khoản? <a href="/ctv/dang-ky">Tạo tài khoản ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

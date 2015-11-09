@@ -1,0 +1,234 @@
+﻿@using cms.business
+@using cms.business.repositories
+@using cms.business.CMS.NewsSvc
+@using WebLibs
+@model List<NewsVideoBO>
+
+<link rel="stylesheet" href="@Url.Content("~/Content/daterangepicker.css")">
+<script type="text/javascript" src="@Url.Content("~/Scripts/date.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/daterangepicker.js")"></script>
+<link rel="stylesheet" href="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.css")">
+
+<div id="wpbody-content">
+    <div class="wrap">
+        <div id="icon-edit" class="icon32 icon32-posts-post">
+            <br />
+        </div>
+        <h2>Video <a href="javascript:void(0);" onclick="AddVideo()" class="add-new-h2">Thêm mới</a></h2>
+        <input type="hidden" id="hdPage" value="@ViewBag.CurrentPage" />
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <input name="datetimepicker" id="datetimepicker" type="text" style="width: 150px!important" placeholder="Chọn thời gian" />
+                <span id="spanCat">
+                    <select name="cboCategory" id="cboCategory" style="width: 200px!important">
+                        <option value="-1">Chọn chuyên mục</option>
+                        @foreach (var obj in ViewBag.ListCategory)
+                        {
+                            <option value="@obj.CategoryID">@obj.CategoryName</option>
+                        }
+                    </select></span>
+                <input name="txtsearchkey" id="txtsearchkey" type="text" style="width: 300px!important" placeholder="Nhập chuỗi tìm kiếm..." />
+                <input type="submit" name="" id="btnVideoNews" onclick="LoadListNewsVideo(1)" class="button-secondary" value="Tìm kiếm" />
+            </div>
+            <div class="tablenav-pages one-page">
+                @if(ViewBag.TotalRecords > 0)
+                {
+                <span class="displaying-num">@ViewBag.TotalRecords kết quả</span>
+                }
+            </div>
+            <input type="hidden" id="hddatefrom" value="">
+            <input type="hidden" id="hddateto" value="">
+            <input type="hidden" id="hdcurrentpage" value="@ViewBag.CurrentPage">
+            <br class="clear">
+        </div>
+        <br class="clear">
+        <div class="clear">
+        </div>
+
+        @if (Model.Count > 0)
+        {
+            <table id="wpbody-content-cm" class="wp-list-table widefat fixed posts" cellspacing="0"
+                style="margin-top: 8px; border-collapse: inherit; width: 100%">
+                <thead>
+                    <tr>
+                        <th width="10%" style="font-weight: normal; text-align: center">Thumb
+                        </th>
+                        <th width="35%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="10%" style="font-weight: normal; text-align: center">Thời lượng
+                        </th>
+                        <th width="15%" style="font-weight: normal">Chuyên mục
+                        </th>
+                        <th width="9%" style="font-weight: normal; text-align: center">Người đăng
+                        </th>
+                        <th width="9%" style="font-weight: normal; text-align: center">Lượt xem
+                        </th>
+                        <th width="12%" style="font-weight: normal; text-align: center">Thời gian đăng
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th width="10%" style="font-weight: normal; text-align: center">Thumb
+                        </th>
+                        <th width="35%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="10%" style="font-weight: normal; text-align: center">Thời lượng
+                        </th>
+                        <th width="15%" style="font-weight: normal">Chuyên mục
+                        </th>
+                        <th width="9%" style="font-weight: normal; text-align: center">Người đăng
+                        </th>
+                        <th width="9%" style="font-weight: normal; text-align: center">Lượt xem
+                        </th>
+                        <th width="12%" style="font-weight: normal; text-align: center">Thời gian đăng
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody id="the-list">
+                    @{int k = 0;}
+                    @foreach (var i in Model)
+                    {
+                        k++;
+                        <tr @if (k % 2 == 0)
+                            {<text>style="background: #f6f6f6"</text>}>
+                            <td style="text-align: center">
+                                @if (!string.IsNullOrEmpty(i.THUMNAILImage))
+                                {
+                                    <img src="@(ConfigHelper.GetString("News.ImageViewPath") + "/video/" + i.VideoID + "/" + i.THUMNAILImage)" alt="Hình đại diện" style="max-height:50px" />
+                                }
+                            </td>
+                            <td class="post-title page-title column-title" style="max-width: 400px">
+                                <strong><a class="row-title" href="javascript:void(0);" onclick="EditVideo(@i.VideoID)">@i.Title</a></strong>
+                                <div class="row-actions">
+                                    <span>
+                                        <a href="javascript:void(0);" onclick="EditVideo(@i.VideoID)">Sửa</a> |
+                                        <a href="javascript:void(0);" onclick="DeleteVideo(@i.VideoID);">Xóa</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="text-align: center">
+                                @i.VideoDuration
+                            </td>
+                            <td style="text-align: left">
+                                @i.ListCategoryName
+                            </td>
+                            <td style="text-align: center">
+                                @i.CreatedUser
+                            </td>
+                            <td style="text-align: center">
+                                @i.ViewCount
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0:dd/MM/yyyy HH:mm}", i.CreatedDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="tablenav bottom">
+                <div class="alignleft actions">
+                    <div class="btn-group right" id="newspg">
+                        <!--[PAGER]-->
+                    </div>
+                    <br class="clear" />
+                </div>
+            </div>
+        }
+    </div>
+    @using (Html.BeginForm("VideoList", "Common", FormMethod.Post,
+            new
+            {
+                enctype = "multipart/form-data",
+                id = "ImgForm",
+                name = "ImgForm",
+                onsubmit = "return validateVideoForm();"
+            }))
+    {
+    <div id="divPropValue" class="modal hide fade">
+        <div>
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>
+                    <span id="popTitle">THÊM MỚI VIDEO</span>
+                </h4>
+                <div class="clear">
+                </div>
+            </div>
+            <div style="overflow-y:scroll;overflow-x:hidden;height:460px">
+            <div class="maincontent">
+                <input type="hidden" id="hfVideoID" name="VideoID" />
+                <span class="post-title">Link youtube *</span><br />
+                <input type="text" id="txtVideoLink" name="VideoLink" style="width: 450px"/><br />
+                <span class="post-title">Chuyên mục video *</span><br />
+                <select id="cboVideoCategory" name="VideoCategory" multiple="multiple" size="4" style="width: 450px">
+                @foreach (var obj in ViewBag.ListCategory)
+                {
+                    <option value="@obj.CategoryID">@obj.CategoryName</option>
+                }
+                </select><br />
+                <span class="post-title">Hình đại diện (Nếu không muốn dùng của youtube)</span><br />
+                <input type="file" id="txtVideoImage" name="VideoImage" style="width: 450px;border:1px solid #ccc"/><br />
+                <span id="spImage"></span>
+                <span class="post-title">Tiêu đề (Nếu không muốn dùng của youtube)</span><br />
+                <input type="text" id="txtVideoTitle" name="VideoTitle" style="width: 450px"/><br />
+                <span class="post-title">Mô tả ngắn (tối đa 300 ký tự)</span><br />
+                <textarea id="txtVideoDescription" name="VideoDescription" style="width: 450px;height:100px"></textarea><br />
+                <span class="post-title">Tin tức liên quan</span><br />
+                <input type="text" id="txtVideoNews" name="VideoNews" style="width: 450px" placeholder="Nhập ID cách nhau bằng dấu phẩy..."/><br />
+                <input type="hidden" id="hfVideoNews" name="hfVideoNews" />
+                <span id="spListNews"></span>
+                <span class="post-title">Từ khóa liên quan</span><br />
+                <input type="text" id="txtKeyword" name="Keyword" style="width: 450px" placeholder="Nhập từ khóa cách nhau bằng dấu phẩy..."/><br />
+                <span class="post-title">Tiêu đề SEO</span><br />
+                <input type="text" id="txtMetaTitle" name="MetaTitle" style="width: 450px"/><br />
+                <span class="post-title">Từ khóa SEO</span><br />
+                <input type="text" id="txtMetaKeyword" name="MetaKeyword" style="width: 450px"/><br />
+                <span class="post-title">Mô tả SEO</span><br />
+                <textarea id="txtMetaDescription" name="MetaDescription" style="width: 450px;height:50px"></textarea><br />
+                <span class="post-title">Ngày xuất bản</span><br />
+                <input type="text" id="txtActivedDate" name="ActivedDate" style="width: 150px" class="datepicker"/><br />
+            </div>
+            <div class="clear"></div>
+            <div class="maincontent">
+                <div id="popMsg" style="color: red"></div>
+                <span class="post-title-ads">&nbsp;</span>
+                <input type="submit" id="btnOK" class="btn btn-primary" style="color:white" value="Đồng ý" />
+                <input type="button" id="btnCancel" onclick="CancelMesage()" class="btn"
+                    value="Hủy bỏ" />
+            </div>
+            </div>
+        </div>
+    </div>
+    }
+    <div class="clear">
+    </div>
+</div>
+<div class="loading hide">
+    Đang tải dữ liệu...
+</div>
+<script type="text/javascript">
+    @if(Session["Error"] != null)
+    {
+        @: alert("@Html.Raw(Session["Error"].ToString())");
+    }
+    var totalPage = parseInt("0" + "@Html.Raw(ViewBag.TotalPages)");
+    var numButton = 8;
+    var CurrentPage = parseInt("0" + "@Html.Raw(ViewBag.CurrentPage)");
+    $(function () {
+        $("#txtActivedDate").datetimepicker({ format: 'm/d/Y H:i' });
+        CreatePagerNewsVideo(CurrentPage, totalPage, numButton);
+        var myDate = new Date();
+        var oldDate = new Date();
+        oldDate.setDate(myDate.getDate() - 7);
+        var fromDate = oldDate.getMonth() + 1 + '/' + oldDate.getDate() + '/' + oldDate.getFullYear();
+        var ToDate = myDate.getMonth() + 1 + '/' + myDate.getDate() + '/' + myDate.getFullYear();
+        $('#datetimepicker').daterangepicker({ startDate: fromDate, endDate: ToDate });
+        @if (ViewBag.ActiveDate != null)
+        {
+            @Html.Raw(ViewBag.ActiveDate);
+        }
+    });
+</script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.news.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.js")"></script>

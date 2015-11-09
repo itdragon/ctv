@@ -1,0 +1,224 @@
+﻿@using cms.business
+@using cms.business.repositories
+@using cms.business.CMS.NewsSvc
+@using WebLibs
+@model List<NewsPollBO>
+
+<link rel="stylesheet" href="@Url.Content("~/Content/daterangepicker.css")">
+<script type="text/javascript" src="@Url.Content("~/Scripts/date.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/daterangepicker.js")"></script>
+<link rel="stylesheet" href="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.css")">
+
+<div id="wpbody-content">
+    <div class="wrap">
+        <div id="icon-edit" class="icon32 icon32-posts-post">
+            <br />
+        </div>
+        <h2> Quản lý Polls 
+            <a href="javascript:void(0);" onclick="AddPolls()" class="add-new-h2">Thêm mới</a>
+            <a href="@Url.Action("NewsList")" class="add-new-h2">Danh sách tin</a>
+        </h2>
+        <input type="hidden" id="hdPage" value="@ViewBag.CurrentPage" />
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <input name="datetimepicker" id="datetimepicker" type="text" style="width: 150px!important" placeholder="Chọn thời gian" />
+                <input name="txtsearchkey" id="txtsearchkey" type="text" style="width: 300px!important" placeholder="Nhập chuỗi tìm kiếm..." />
+                <input type="submit" name="" id="btnPollNews" onclick="LoadListNewsPoll(1)" class="button-secondary" value="Tìm kiếm" />
+            </div>
+            <div class="tablenav-pages one-page">
+                @if(ViewBag.TotalRecords > 0)
+                {
+                <span class="displaying-num">@ViewBag.TotalRecords kết quả</span>
+                }
+            </div>
+            <input type="hidden" id="hddatefrom" value="">
+            <input type="hidden" id="hddateto" value="">
+            <input type="hidden" id="hdcurrentpage" value="@ViewBag.CurrentPage">
+            <br class="clear">
+        </div>
+        <br class="clear">
+        <div class="clear">
+        </div>
+
+        @if (Model.Count > 0)
+        {
+            <table id="wpbody-content-cm" class="wp-list-table widefat fixed posts" cellspacing="0"
+                style="margin-top: 8px; border-collapse: inherit; width: 100%">
+                <thead>
+                    <tr>
+                        <th width="10%" style="font-weight: normal; text-align: center">ID
+                        </th>
+                        <th width="35%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thumb 1
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thumb 2
+                        </th>
+                        <th width="10%" style="font-weight: normal; text-align: center">Người đăng
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thời gian đăng
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th width="10%" style="font-weight: normal; text-align: center">ID
+                        </th>
+                        <th width="35%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thumb 1
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thumb 2
+                        </th>
+                        <th width="10%" style="font-weight: normal; text-align: center">Người đăng
+                        </th>
+                        <th width="15%" style="font-weight: normal; text-align: center">Thời gian đăng
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody id="the-list">
+                    @{int k = 0;}
+                    @foreach (var i in Model)
+                    {
+                        k++;
+                        <tr @if (k % 2 == 0)
+                            {<text>style="background: #f6f6f6"</text>}>
+                            <td style="text-align: center">
+                                @i.PollID
+                            </td>
+                            <td class="post-title page-title column-title" style="max-width: 400px">
+                                <strong><a class="row-title" href="javascript:void(0);" onclick="EditPolls(@i.PollID)">@i.Title</a></strong>
+                                <div class="row-actions">
+                                    <span>
+                                        <a href="javascript:void(0);" onclick="EditPolls(@i.PollID)">Sửa</a> |
+                                        <a href="javascript:void(0);" onclick="DeletePolls(@i.PollID);">Xóa</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="text-align: center">
+                                @if (!string.IsNullOrEmpty(i.RepresentImage1))
+                                {
+                                    <img src="@(ConfigHelper.GetString("News.ImageViewPath") + "/polls/" + i.PollID + "/" + i.RepresentImage1)" alt="Hình đại diện" style="max-height:50px" />
+                                }
+                            </td>
+                            <td style="text-align: center">
+                                @if (!string.IsNullOrEmpty(i.RepresentImage2))
+                                {
+                                    <img src="@(ConfigHelper.GetString("News.ImageViewPath") + "/polls/" + i.PollID + "/" + i.RepresentImage2)" alt="Hình đại diện" style="max-height:50px" />
+                                }
+                            </td>
+                            <td style="text-align: center">
+                                @i.CreatedUser
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0:dd/MM/yyyy HH:mm}", i.CreatedDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="tablenav bottom">
+                <div class="alignleft actions">
+                    <div class="btn-group right" id="newspg">
+                        <!--[PAGER]-->
+                    </div>
+                    <br class="clear" />
+                </div>
+            </div>
+        }
+    </div>
+    @using (Html.BeginForm("PollsList", "Common", FormMethod.Post,
+            new
+            {
+                enctype = "multipart/form-data",
+                id = "ImgForm",
+                name = "ImgForm",
+                onsubmit = "return validatePollsForm();"
+            }))
+    {
+    <div id="divPropValue" class="modal hide fade">
+        <div>
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>
+                    <span id="popTitle">THÊM MỚI POLLS</span>
+                </h4>
+                <div class="clear">
+                </div>
+            </div>
+            <div style="overflow-y:scroll;overflow-x:hidden;height:460px">
+            <div class="maincontent">
+                <input type="radio" name="PollType" value="1" onclick="ChangePollType(1)" /> Faceoff&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="PollType" value="2" onclick="ChangePollType(2)" /> Poll question<br /><br />
+                <input type="hidden" id="hfPollID" name="PollID" />
+                <span class="post-title">Tiêu đề *</span><br />
+                <input type="text" id="txtPollTitle" name="PollTitle" style="width: 450px"/><br />
+                <span id="spanImage" class="post-title">Hình đại diện 1 (390x200 px)
+                </span><br />
+                <input type="file" id="txtPollImage1" name="PollImage1" style="width: 450px;border:1px solid #ccc"/><br />
+                <span id="spImage1"></span>
+                <span id="spanMImage" class="post-title">Hình mobile đại diện 1 (390x390 px)
+                </span><br />
+                <input type="file" id="txtMPollImage1" name="MPollImage1" style="width: 450px;border:1px solid #ccc"/><br />
+                <span id="spMImage1"></span>
+                <div id="divPoll">
+                <span class="post-title">Tên hình đại diện 1</span><br />
+                <input type="text" id="txtImageName1" name="ImageName1" style="width: 450px"/><br />
+                <span class="post-title">Hình đại diện 2 (390x200 px)
+                </span><br />
+                <input type="file" id="txtPollImage2" name="PollImage2" style="width: 450px;border:1px solid #ccc"/><br />
+                <span id="spImage2"></span>
+                <span class="post-title">Hình mobile đại diện 2 (390x390 px)
+                </span><br />
+                <input type="file" id="txtMPollImage2" name="MPollImage2" style="width: 450px;border:1px solid #ccc"/><br />
+                <span id="spMImage2"></span>
+                <span class="post-title">Tên hình đại diện 2</span><br />
+                <input type="text" id="txtImageName2" name="ImageName2" style="width: 450px"/><br />
+                </div>
+                <span class="post-title">Mô tả ngắn (tối đa 300 ký tự)</span><br />
+                <textarea id="txtPollDescription" name="PollDescription" style="width: 450px;height:100px"></textarea><br />
+                
+            </div>
+            <div class="clear"></div>
+            <div class="maincontent">
+                <div id="popMsg" style="color: red"></div>
+                <span class="post-title-ads">&nbsp;</span>
+                <input type="submit" id="btnOK" class="btn btn-primary" style="color:white" value="Đồng ý" />
+                <input type="button" id="btnCancel" onclick="CancelMesage()" class="btn"
+                    value="Hủy bỏ" />
+            </div>
+            </div>
+        </div>
+    </div>
+    }
+    <div class="clear">
+    </div>
+</div>
+<div class="loading hide">
+    Đang tải dữ liệu...
+</div>
+<script type="text/javascript">
+    @if(Session["Error"] != null)
+    {
+        @: alert("@Html.Raw(Session["Error"].ToString())");
+    }
+    var totalPage = parseInt("0" + "@Html.Raw(ViewBag.TotalPages)");
+    var numButton = 8;
+    var CurrentPage = parseInt("0" + "@Html.Raw(ViewBag.CurrentPage)");
+    $(function () {
+        CreatePagerNewsPoll(CurrentPage, totalPage, numButton);
+        var myDate = new Date();
+        var oldDate = new Date();
+        oldDate.setDate(myDate.getDate() - 7);
+        var fromDate = oldDate.getMonth() + 1 + '/' + oldDate.getDate() + '/' + oldDate.getFullYear();
+        var ToDate = myDate.getMonth() + 1 + '/' + myDate.getDate() + '/' + myDate.getFullYear();
+        $('#datetimepicker').daterangepicker({ startDate: fromDate, endDate: ToDate });
+        @if (ViewBag.ActiveDate != null)
+        {
+            @Html.Raw(ViewBag.ActiveDate);
+        }
+    });
+</script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.news.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.js")"></script>
+

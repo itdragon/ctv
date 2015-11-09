@@ -1,0 +1,153 @@
+﻿@using cms.business
+@using cms.business.repositories
+@using cms.business.CMS.NewsSvc
+@using WebLibs
+@model List<NewsBO>
+
+<div id="wpbody-content">
+    <div class="wrap">
+        <div id="icon-edit" class="icon32 icon32-posts-post">
+            <br />
+        </div>
+        <h2>Tin tức 
+        <a href="@Url.Action("New")" class="add-new-h2">Thêm mới</a>
+        </h2>
+        <div class="tablenav top">
+            <div class="alignleft actions">
+                <select name="action" id="cboAction-news">
+                    <option value="-1" selected="selected">Chọn tác vụ</option>
+                    <option value="1">Xóa hàng loạt</option>
+                </select>
+                <input type="button" id="doaction-news" class="button-secondary action" onclick="DoAction()" value="Thực hiện" />
+            </div>
+            <div class="alignleft actions">
+                <input name="txtsearchkey" id="txtsearchkey" type="text" style="width: 400px!important" value="@ViewBag.Key" placeholder="Nhập chuỗi tìm kiếm..." />
+                <input type="submit" id="post-search-news" class="button-secondary" value="Tìm bài viết" onclick="LoadListNews(1)" />
+            </div>
+            <div class="tablenav-pages one-page">
+                <span class="displaying-num">@ViewBag.TotalRecords bài viết</span>
+            </div>
+            <input type="hidden" id="hdcurrentpage" value="@ViewBag.CurrentPage">
+            <br class="clear">
+        </div>
+        <br class="clear">
+        <div class="clear">
+        </div>
+        @if (Model.Count > 0)
+        {
+            <table id="wpbody-content-cm" class="wp-list-table widefat fixed posts" cellspacing="0"
+                style="margin-top: 8px;width:100%;border-collapse:inherit">
+                <thead>
+                    <tr>
+                        <th width="5%">
+                            <input id="selectallnews1" name="selectallnews1" class="checkAll" type="checkbox" />
+                        </th>
+                        <th width="5%" style="font-weight: normal;text-align: center">ID
+                        </th>
+                        <th width="50%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Thời gian đăng
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Lượt xem
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Bình luận
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Ảnh đại diện
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th width="5%">
+                            <input id="selectallnews2" name="selectallnews2" class="checkAll" type="checkbox" />
+                        </th>
+                        <th width="5%" style="font-weight: normal;text-align: center">ID
+                        </th>
+                        <th width="50%" style="font-weight: normal">Tiêu đề
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Thời gian đăng
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Lượt xem
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Bình luận
+                        </th>
+                        <th width="10%" style="font-weight: normal;text-align: center">Ảnh đại diện
+                        </th>
+                    </tr>
+                </tfoot>
+                <tbody id="the-list">
+                    @{int k = 0;}
+                    @foreach (var i in Model)
+                    {
+                        k++;
+                        <tr name="postnews" id="postnews@(i.NewsID)" @if (k % 2 == 0)
+                                                                     {<text>style="background: #f6f6f6"</text>}>
+                            <th>
+                                <input type="checkbox" id="chkNewsID" name="chkNewsID" value="@i.NewsID"/>
+                            </th>
+                            <td style="text-align: center">
+                                @i.NewsID
+                            </td>
+                            <td class="post-title page-title column-title" style="max-width: 400px">
+                                <strong><a class="row-title" href="@Url.Action("New", new {id = i.NewsID})" title="">@i.Title</a></strong>
+                                <div class="row-actions">
+                                    <span>
+                                        <a href="javascript:void(0);" onclick="DeleteOneNews(@i.NewsID);">Xóa</a> |
+                                        <a href="@SEOHelper.GenNewsDetailURL(i)" target="_blank">Xem</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0:dd/MM/yyyy HH:mm}", i.CreatedDate)
+                            </td>
+                            <td style="text-align: center">
+                                @i.ViewCounter
+                            </td>
+                            <td style="text-align: center">
+                                @i.AmountComment
+                            </td>
+                            <td style="text-align: left">
+                                @if (!string.IsNullOrEmpty(i.ThumbnailImage))
+                                {
+                                    string strLink = string.Empty;
+                                    if (i.CreatedDate != null)
+                                    {
+                                        strLink += i.CreatedDate.Value.Year + "/" + i.CreatedDate.Value.Month.ToString("00") + "/" + i.CreatedDate.Value.Day.ToString("00") + "/";
+                                    }
+                                    <img src="@(ConfigHelper.GetString("News.ImageViewPath") + "/" + strLink + i.NewsID + "/" + i.ThumbnailImage)" alt="Hình đại diện" />
+                                }
+                            </td>
+                        </tr>
+                        }
+                </tbody>
+            </table>
+            <div class="tablenav bottom">
+                <div class="alignleft actions">
+                    <select name="action" id="cboAction-news2">
+                        <option value="-1" selected="selected">Chọn tác vụ</option>
+                        <option value="1">Xóa</option>
+                    </select>
+                    <input type="button" id="doaction-news2" class="button-secondary action" onclick="DoAction()" value="Thực hiện" />
+                </div>
+                <div class="btn-group right" id="newspg">
+                    <!--[PAGER]-->
+                </div>
+                <br class="clear" />
+            </div>
+        }
+    </div>
+    <div class="clear">
+    </div>
+</div>
+<div class="loading hide">
+    Đang tải dữ liệu...
+</div>
+<script type="text/javascript">
+    var totalPage = parseInt("0" + "@Html.Raw(ViewBag.TotalPages)");
+    var numButton = 8;
+    var CurrentPage = parseInt("0" + "@Html.Raw(ViewBag.CurrentPage)");
+    $(function () {
+        CreatePagerNews(CurrentPage, totalPage, numButton);
+    });
+</script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.news.js")"></script>

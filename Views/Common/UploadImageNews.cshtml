@@ -1,0 +1,23 @@
+﻿<div onclick="cms_Uploadimage_ShowNews(myCallBackNews)" style="cursor: pointer">
+    Upload ảnh
+    <img src="@Url.Content("~/Content/images/media-button.png")" width="15" height="15" />
+    <span id="cms_upload_id_dv_error_detailproduct" class="alert alert-block alert-error fade"
+        style="padding: 1px;">Chức năng này chỉ áp dụng khi sửa tin tức </span>
+</div>
+<div style="clear: both;">
+</div>
+<div id="cms-uploadimage" class="modal hide fade in cms-upload-body-popup" style="display: none;"  siteid="@ViewBag.SiteId" categoryid="@ViewBag.CategoryId" productid="@ViewBag.ProductId" username="@ViewBag.UserName" module="@ViewBag.Module">
+</div>
+ @*module = 0 : product   module = 1 : news*@
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var tgdd_cms_urlroot = '@ViewBag.UrlUpload';
+    (function () {
+        var tgddcms = document.createElement('script');
+        tgddcms.type = 'text/javascript';
+        tgddcms.async = true;
+        tgddcms.src = tgdd_cms_urlroot + '/Scripts/js.upload.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(tgddcms);
+    })();
+   
+</script>

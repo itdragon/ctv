@@ -1,0 +1,709 @@
+﻿@{
+    ViewBag.Title = "CMS - Cộng tác viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using cms.business
+@using cms.business.CMS.NewsSvc
+@using cms.business.SystemSvc;
+@model NewsBO
+@section INC_META
+{
+    <title>@ViewBag.Title</title>
+}
+@section INC_CSS
+{
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" type="text/css" media="all">
+    <link rel="stylesheet" href="@Url.Content("~/Content/new.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.css")">
+}
+@section INC_JS
+{
+    <script type="text/javascript">
+        function myCallBackNews(tagimg) {
+            //tinymce.execCommand("mceInsertContent", false, tagimg);
+            CKEDITOR.instances["content"].insertHtml(tagimg);
+        }
+    </script>
+}
+<!-- Add new -->
+@using (Html.BeginForm("New", "Common", FormMethod.Post,
+new { name = "myForm", id = "myForm", enctype = "multipart/form-data" }
+))
+{
+    <script type="text/javascript">
+        document.body.className = document.body.className.replace('no-js', 'js');
+    </script>
+    <div id="wpcontent">
+        <div id="wpbody">
+            <div id="wpbody-content">
+                <div class="wrap">
+                    <div id="icon-edit" class="icon32 icon32-posts-post">
+                        <br />
+                    </div>
+                    @if (ViewBag.NewsID <= 0)
+                    {
+                        <h2>Tạo tin/chủ đề mới
+                            <a href="@Url.Action("NewsList")" class="add-new-h2">Danh sách tin</a>
+                            <a href="@Url.Action("Video")" class="add-new-h2">Danh sách video</a>
+                            <a href="@Url.Action("Polls")" class="add-new-h2">Danh sách poll</a>
+                        </h2>
+                    }
+                    else
+                    {
+                        <h2>Chỉnh sửa tin/chủ đề
+                            <a href="@Url.Action("New")" class="add-new-h2">Thêm mới</a>
+                            <a href="@Url.Action("NewsList")" class="add-new-h2">Danh sách tin</a>
+                            <a href="@Url.Action("Video")" class="add-new-h2">Danh sách video</a>
+                            <a href="@Url.Action("Polls")" class="add-new-h2">Danh sách poll</a>
+                        </h2>
+                    }
+                    <div id="poststuff">
+                        <div id="post-body" class="metabox-holder columns-2">
+                            <div id="post-body-content">
+                                <div id="titlediv">
+                                    <div id="titlewrap">
+                                        <input type="text" name="post_title" size="30" tabindex="1" id="title" autocomplete="off"
+                                            required="true" value="@Model.Title" onblur="CheckExistName(this, 2)" placeholder="Nhập tiêu đề tin tức ở đây" />
+                                        <input type="hidden" id="hfTitle" value="@Model.Title" />
+                                        <div class="counter"><span id="TitleCount">0</span>/300</div>
+                                    </div>
+                                    <div class="inside">
+                                        <div id="edit-slug-box">
+                                            <strong>Url:</strong>
+                                            <span id="url1" style="@(string.IsNullOrEmpty(Model.URL) ? "display:none" : "")">
+                                                <span id="spanUrl">@Model.URL</span>
+                                                <input type="button" id="EditUrl" value="Sửa" class="button button-highlighted" />
+                                            </span>
+                                            <span id="url2" style="display: none">
+                                                <input type="text" id="txtUrl" name="txtUrl" value="@Model.URL" style="width: 50%" />
+                                                <input type="button" id="UrlOK" value="OK" class="button button-highlighted" />
+                                                <input type="button" id="UrlCancel" value="Cancel" class="button button-highlighted" />
+                                                <span id="URLCount" style="margin-left:20px">0</span> ký tự
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div id="postdivrich" class="postarea">
+                                    <div id="wp-content-wrap" class="wp-editor-wrap tmce-active" style="margin-top:20px">
+                                        <div id="wp-content-editor-tools" class="wp-editor-tools">
+                                            <div style="width:400px;height:10px">
+                                                @Html.Action("UploadImageNews", "Common", new { NewsId = ViewBag.NewsID, SiteId = ViewBag.SiteID })
+                                            </div>
+                                            <div class="button-search" style="float:right;text-align:right;left:0;width:500px">
+                                                <a href="javascript:void(0);" onclick="AddVideoNews()">Thêm Video</a>
+                                                <select id="cbShortCode" style="width:200px;padding:0;margin:0" onchange="AddShortCode()">
+                                                    <option value="none">----- Chọn shortcode -----</option>
+                                                    <option value="captionnews">Caption Image</option>
+                                                    <option value="checklist">Check List</option>
+                                                    <option value="arrowlist">Arrow List</option>
+                                                    <option value="dropcap">Drop Caps</option>
+                                                    <option value="infobox">Information box</option>
+                                                    <option value="successbox">Success box</option>
+                                                    <option value="warningbox">Warning box</option>
+                                                    <option value="nextpage">Ngắt trang</option>
+                                                    <option value="newscompare">So sánh sản phẩm</option>
+                                                    <option value="gallerycompare">So sánh hình camera</option>
+                                                    <option value="newsgallery">Gallery ảnh chụp từ camera thiết bị</option>
+                                                    <option value="newsspecs">Bảng tính năng sản phẩm</option>
+                                                    <option value="prediction">Chương trình game</option>
+                                                    <option value="oldproduct">Danh sách máy đổi trả</option>
+                                                    <option value="bannerpromote">Banner khuyến mãi</option>
+                                                    <option value="survey">Câu hỏi khảo sát</option>
+                                                    <option value="gameapp">Game-App</option>
+                                                    <option value="polls">Thêm polls</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div id="wp-content-editor-container" class="wp-editor-container" style="clear:both">
+                                            <textarea style="height:500px" id="content" name="content">@Html.Raw(Model.Content)</textarea>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /post-body-content -->
+                            <div id="postbox-container-1" class="postbox-container">
+                                <div id="side-sortables" class="meta-box-sortables">
+                                    <div id="submitdiv" class="postbox ">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Xuất bản</span></h3>
+                                        <div class="inside">
+                                            <div class="submitbox" id="submitpost">
+                                                <div id="minor-publishing">
+                                                    <div id="minor-publishing-actions">
+                                                        <div id="save-action">
+                                                            <input type="submit" name="draft" id="save-post" value="Lưu nháp" tabindex="4"
+                                                                class="button button-highlighted" />
+                                                            <img src="@Url.Content("~/Content/images/wpspin_light.gif")" class="ajax-loading" id="draft-ajax-loading"
+                                                                alt="" />
+                                                        </div>
+                                                        @if (Model.IsActived)
+                                                        {
+                                                        <div id="preview-action">
+                                                            <a class="preview button" href="@SEOHelper.GenNewsDetailURL(Model)" target="_blank">Xem trên web</a>
+                                                        </div>
+                                                        }
+                                                        @if (ViewBag.NewsID > 0)
+                                                        {
+                                                        <br /><div style="margin-top:10px">
+                                                            <a class="preview button" href="https://www.thegioididong.com/tin-tuc/xem-truoc/@Model.NewsID" target="_blank">Xem trước</a>
+                                                        </div>
+                                                        }
+                                                        <div class="clear">
+                                                        </div>
+                                                    </div>
+                                                    <div id="misc-publishing-actions">
+                                                        <div class="misc-pub-section">
+                                                            <label for="post_status">
+                                                                Trạng thái:</label>
+                                                            <span id="post-status-display">Nháp</span>
+                                                            <a href="javascript:void(0);" class="edit-post-status">Sửa</a>
+                                                            <div id="post-status-select" style="display: none">
+                                                                <select name='post_status' id='post_status'>
+                                                                    <option value='draft'>Nháp</option>
+                                                                    <option value='pending'>Chờ duyệt</option>
+                                                                    @if (Model.NewsID > 0)
+                                                                    {
+                                                                        <option value='publish'>Xuất bản</option>
+                                                                    }
+                                                                </select>
+                                                                @if (Model.NewsID > 0)
+                                                                {
+                                                                    if (Model.IsDraft)
+                                                                    {
+                                                                    <script>
+                                                                        $("#post_status").val('draft');
+                                                                        $("#post-status-display").text('Nháp');
+                                                                        $("#save-post").attr("name", "draft");
+                                                                        $("#save-post").val("Lưu nháp");
+                                                                    </script>
+                                                                    }
+                                                                    else if (!Model.IsActived)
+                                                                    {
+                                                                    <script>
+                                                                        $("#post_status").val('pending');
+                                                                        $("#post-status-display").text('Chờ duyệt');
+                                                                        $("#save-post").attr("name", "pending");
+                                                                        $("#save-post").val("Lưu chờ duyệt");
+                                                                    </script>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    <script>
+                                                                        $("#post_status").val('publish');
+                                                                        $("#post-status-display").text('Xuất bản');
+                                                                        $("#save-post").css("display", "none");
+                                                                    </script>
+                                                                    }
+                                                                }
+                                                                <a href="javascript:void(0);" class="save-post-status button">OK</a>
+                                                                <a href="javascript:void(0);" class="cancel-post-status">Cancel</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="misc-pub-section curtime">
+                                                            <span id="timestamp">Xuất bản: <b>Ngay lập tức</b></span>
+                                                            <a href="javascript:void(0);" class="edit-timestamp">Sửa</a>
+                                                            <div id="timestampdiv" style="display: none">
+                                                                <div class="timestamp-wrap">
+                                                                    <select id="mm" name="mm" tabindex="4">
+                                                                        <option value="1">01-Jan</option>
+                                                                        <option value="2">02-Feb</option>
+                                                                        <option value="3">03-Mar</option>
+                                                                        <option value="4">04-Apr</option>
+                                                                        <option value="5">05-May</option>
+                                                                        <option value="6">06-Jun</option>
+                                                                        <option value="7">07-Jul</option>
+                                                                        <option value="8">08-Aug</option>
+                                                                        <option value="9">09-Sep</option>
+                                                                        <option value="10">10-Oct</option>
+                                                                        <option value="11">11-Nov</option>
+                                                                        <option value="12">12-Dec</option>
+                                                                    </select>
+                                                                    <script>
+                                                                        $("#mm").val('@(Model.ActivedDate == null ? DateTime.Now.Month : Model.ActivedDate.Value.Month)');
+                                                                    </script>
+                                                                    <input type="text" id="dd" name="dd" value="@(Model.ActivedDate == null ? DateTime.Now.Day : Model.ActivedDate.Value.Day)" size="2" maxlength="2"/>
+                                                                    ,
+                                                                    <input type="text" id="yy" name="yy" value="@(Model.ActivedDate == null ? DateTime.Now.Year : Model.ActivedDate.Value.Year)" size="4" maxlength="4"/>
+                                                                    @@
+                                                                    <input type="text" id="hh" name="hh" value="@(Model.ActivedDate == null ? DateTime.Now.Hour : Model.ActivedDate.Value.Hour)" size="2" maxlength="2"/>
+                                                                    :
+                                                                    <input type="text" id="mn" name="mn" value="@(Model.ActivedDate == null ? DateTime.Now.Minute : Model.ActivedDate.Value.Minute)" size="2" maxlength="2"/>
+                                                                </div>
+                                                                @if (Model.ActivedDate != null)
+                                                                {
+                                                                    <script>$("#timestamp").html("Xuất bản: <b>" + $("#mm option:selected").text() + " " + $("#dd").val() + ", " + $("#yy").val() + " @@ " + $("#hh").val() + ":" + $("#mn").val() + "</b>");</script>
+                                                                }
+                                                                <p>
+                                                                    <a href="javascript:void(0);" class="save-timestamp button">OK</a>
+                                                                    <a href="javascript:void(0);" class="cancel-timestamp">Cancel</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="misc-pub-section">
+                                                            <label for="post_icon">Icon bài viết:</label>
+                                                            <span class="post-icon-display">
+                                                                <input type="checkbox" id="IsGallery" name="IsGallery" @if (Model.IsGallery)
+                                                                                                                       {<text>checked="checked"</text>} /><label>Có gallery</label>
+                                                                <input type="checkbox" id="IsVideo" name="IsVideo" @if (Model.IsVideo)
+                                                                                                                   {<text>checked="checked"</text>} /><label>Có video</label>
+                                                            </span>
+                                                        </div>
+                                                        <div class="misc-pub-section" style="display:none">
+                                                            <span class="post-icon">
+                                                                <input type="checkbox" id="ckSticky" name="ckSticky" @if (Model.IsSticked)
+                                                                                                                     {<text>checked="checked"</text>} /><label>Hero topic&nbsp;&nbsp;</label>
+                                                                <input type="checkbox" id="ckFeature" name="ckFeature" @if (Model.IsFeature)
+                                                                                                                       {<text>checked="checked"</text>} /><label>Featured</label>
+                                                                <input type="checkbox" id="IsComment" name="IsComment" @if (Model.IsCommentAllow)
+                                                                                                                       {<text>checked="checked"</text>} /><label>Ẩn trang chủ</label>
+                                                            </span>
+                                                        </div>
+                                                        <div class="misc-pub-section" style="display:none">
+                                                            <span class="post-icon">
+                                                                <input type="checkbox" id="IsAdvisory" name="IsAdvisory" @if (Model.IsAdvisory)
+                                                                                                                         {<text>checked="checked"</text>} /><label>Tin tư vấn</label>
+                                                                &nbsp;
+                                                                <input type="checkbox" id="IsManual" name="IsManual" @if (Model.IsManual)
+                                                                                                                     {<text>checked="checked"</text>} /><label>Tin hướng dẫn sử dụng</label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="major-publishing-actions">
+                                                    <div id="publishing-action" @if (Model.NewsID == 0 || !Model.IsActived)
+                                                                                {<text>style="display:none"</text>}>
+                                                        <input type="hidden" name="NewsID" id="NewsID" value="@ViewBag.NewsID" />
+                                                        <input type="hidden" name="SiteID" id="SiteID" value="@ViewBag.SiteID" />
+                                                        <img src="@Url.Content("~/Content/images/wpspin_light.gif")" class="ajax-loading" id="ajax-loading" alt="" />
+                                                        <input type="submit" name="publish" id="publish" onclick="return validatenewsnew('0');" class="button-primary" value="@(ViewBag.NewsID == 0 ? "Xuất bản" : "Cập nhật")"
+                                                            tabindex="5" accesskey="p" />
+                                                    </div>
+                                                    <div class="clear">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (ViewBag.NewsID > 0)
+                                    {
+                                        <div id="postimagediv" class="postbox ">
+                                            <div class="handlediv" title="Click to toggle">
+                                                <br />
+                                            </div>
+                                            <h3 class='hndle'>
+                                                <span>Ảnh đại diện (thumbnail)</span></h3>
+                                            @if (!string.IsNullOrEmpty(Model.ThumbnailImageMEDIUM))
+                                            {
+                                                string strLink = string.Empty;
+                                                if (Model.CreatedDate != null)
+                                                {
+                                                    strLink += Model.CreatedDate.Value.Year + "/" + Model.CreatedDate.Value.Month.ToString("00") + "/" + Model.CreatedDate.Value.Day.ToString("00") + "/";
+                                                }
+                                                <div class="inside" style="text-align: center">
+                                                    <img src="@(ConfigHelper.GetString("News.ImageViewPath") + "/" + strLink + Model.NewsID + "/" + Model.ThumbnailImageMEDIUM)" alt="Hình đại diện" />
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    <div id="categorydiv" class="postbox ">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Chuyên mục</span></h3>
+                                        <div class="inside">
+                                            <div id="taxonomy-category" class="categorydiv">
+                                                <ul id="category-tabs" class="category-tabs">
+                                                    <li class="tabs"><a href="#category-all" tabindex="3">Tất cả</a></li>
+                                                </ul>
+                                                <div id="newscategory-all" class="tabs-panel">
+                                                    @Html.Raw(ViewBag.HtmlCategory)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="tagsdiv-post_tag" class="postbox ">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Từ khóa</span></h3>
+                                        <div class="inside">
+                                            <div class="tagsdiv" id="post_tag">
+                                                <div class="jaxtag">
+                                                    <div class="ajaxtag">
+                                                        <p>
+                                                            <input type="text" id="txtNewsKeyword" name="Keyword" class="newtag form-input-tip"
+                                                                size="16" autocomplete="off" value="@Model.KeyWord" onkeypress="return LimitWord('txtKeyword',230)" />
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="howto">
+                                                            Ngăn cách các từ khóa bằng dấu ","
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="tagchecklist">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="postbox">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Tags</span></h3>
+                                        <div class="inside">
+                                            <div class="tagsdiv">
+                                                <div class="jaxtag">
+                                                    <div class="ajaxtag">
+                                                        <p>
+                                                            <input type="text" id="txtTags" name="Tags" class="newtag form-input-tip" value="@Model.Tags" />
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="howto">
+                                                            Ngăn cách các tag bằng dấu ","
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (ViewBag.NewsID > 0)
+                                    {
+                                    <div class="postbox">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Thêm từ khóa tin đồn</span></h3>
+                                        <div class="inside">
+                                            <div class="tagsdiv">
+                                                <div class="jaxtag">
+                                                    <div class="ajaxtag">
+                                                        <p>
+                                                            <input type="text" id="txtKeywordEvent" class="newtag form-input-tip" placeholder="Nhập từ khóa..." />
+                                                            <input type="text" id="txtKeywordDate" class="datepicker" style="width:150px" placeholder="Nhập ngày dự kiến..." />
+                                                            <input id="btnKeyword" type="button" class="btn" value="Thêm vào lịch" onclick="AddToCalendar(@ViewBag.NewsID)" />
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                            <div id="postbox-container-2" class="postbox-container">
+                                <div id="normal-sortables" class="meta-box-sortables">
+                                    <div id="postexcerpt" class="postbox  hide-if-js" style="display: block">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Mô tả ngắn (Dành cho tin tức)</span></h3>
+                                        <div class="inside">
+                                            <div id="wp-shortdes-wrap" class="wp-editor-wrap tmce-active">
+                                                <div id="wp-shortdes-editor-tools" class="wp-editor-tools">
+                                                </div>
+                                                <div id="wp-shortdes-editor-container" class="wp-editor-container">
+                                                    <textarea class="ckeditor" rows="10" cols="40" id="shortdes" name="shortdes">@Html.Raw(Model.ShortDescription)</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="advanced-sortables" class="meta-box-sortables">
+                                    <div id="ralate-wrap" class="postbox" style="display:none">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Các tin liên quan đến bài viết này</span></h3>
+                                        <div class="inside">
+                                            <div class="relate-note">Bạn có thể sắp xếp lại trật tự bài viết bằng cách kéo-thả rồi nhấn Lưu bài viết (tối đa 5 tin)</div>
+                                            <div id="div-realate-content" class="relate-content">
+                                                @{
+                                    string strRelate = "";
+                                                }
+                                                @if (ViewBag.RelateNews != null)
+                                                {
+                                                    foreach (NewsBO objNews in ViewBag.RelateNews)
+                                                    {
+                                                        strRelate += objNews.NewsID + ",";
+                                                    <div id="news-@objNews.NewsID">
+                                                        <a href="/News/New?NewsId=@objNews.NewsID">@objNews.Title</a>
+                                                        <a class="btn-delete" href="javascript:void(0);" onclick="removeNews(@objNews.NewsID)">
+                                                            <img src="/Content/images/delete.png" /></a>
+                                                    </div>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="relate-content">
+                                                <div id="ralate-search">
+                                                    <div>Tìm kiếm</div>
+                                                    <span>
+                                                        <input type="text" id="txtSearchRelate" />
+                                                        <input type="hidden" id="hdRelateNews" name="hdRelateNews" value="@strRelate" />
+                                                    </span>
+                                                    <span id="relate-result"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="postbox" style="display:none">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Gắn Featured info box (Dành cho bài Review)</span></h3>
+                                        <div class="inside">
+                                            <div class="product-content">
+                                                <div id="product-search">
+                                                    <span>
+                                                        <label>Bạn muốn tìm sản phẩm nào</label>
+                                                        <input type="text" id="txtSearchproduct" />
+                                                        <input type="hidden" id="hdFeatureProduct" name="hdFeatureProduct" value="@Model.RelateProductID" />
+                                                        <div id="product-suggest" style="display: none">
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                                <div id="product-feature">
+                                                    @if (ViewBag.RelateProduct != null && ViewBag.RelateProduct.ProductID != 0)
+                                                    {
+                                                        <div>
+                                                            <label>@ViewBag.RelateProduct.ProductName</label>
+                                                            <a href="javascript:void(0);" onclick="removeProduct()">
+                                                                <img src="/Content/images/delete.png" /></a>
+                                                        </div>
+                                                        <div>Điểm số: <b>@ViewBag.RelateProduct.RatingScore</b></div>
+                                                    }
+                                                </div>
+                                                <div id="product-option">
+                                                    <div>
+                                                        <input type="checkbox" id="ckDisplayPoint" name="ckDisplayPoint" /><label>Hiển thị điểm số đánh giá</label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="checkbox" id="ckAllowReview" name="ckAllowReview" /><label>Cho người dùng đánh giá ngay trên trang này</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="postbox">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Loại bài viết (Post Format)</span></h3>
+                                        <div class="inside">
+                                            <div class="topic-content">
+                                                <div>
+                                                    <div>
+                                                        <label>Post Type:</label>
+                                                        <input type="radio" id="rdPostType_0" name="PostType" value="0" style="margin-left: 75px" />
+                                                        <label>Standard</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="rdPostType_1" name="PostType" value="1" style="margin-left:75px" /> <label>Compare</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="rdPostType_2" name="PostType" value="2" /> <label>Video</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="rdPostType_3" name="PostType" value="3" /> <label>Review</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="rdPostType_4" name="PostType" value="4" /> <label>Gallery</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="rdPostType_5" name="PostType" value="5" /> <label>FullWidth</label>
+                                                    </div><br />
+                                                    <div>
+                                                        <label>Ribbon text:</label>
+                                                        <input name="LabelName" id="LabelName" type="text" style="width: 400px; margin-left: 67px;" value="@Model.LabelName" maxlength="16" /><br />
+                                                        <label>Ribbon color:</label>
+                                                        <select name="LabelColor" id="LabelColor" style="width: 150px; margin-left: 61px;">
+                                                            <option value="#cf3843">Đỏ</option>
+                                                            <option value="#9f00a7">Tím</option>
+                                                            <option value="#aacf38">Xanh cốm</option>
+                                                            <option value="#2f97db">Xanh dương</option>
+                                                            <option value="#e88613">Da cam</option>
+                                                        </select>
+                                                    </div>
+                                                    <div id="divVideoPost">
+                                                        <label>Link Video:</label>
+                                                        <input name="NewsVideoLink" id="NewsVideoLink" type="text" style="width: 400px; margin-left: 73px;" value="@Model.VideoLink" /><br />
+                                                        <label>Thời lượng Video:</label>
+                                                        <input name="VideoDuration" id="VideoDuration" type="text" style="width: 70px; margin-left: 33px;" value="@Model.VideoDuration" />
+                                                    </div>
+                                                    @if (Model.PostType > 0)
+                                                    {
+                                                    <script>
+                                                        $("input[name='PostType'][value='@Model.PostType']").prop("checked", true);
+                                                        $("#LabelColor").val('@Model.LabelColor');
+                                                    </script>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="postbox ">
+                                        <div class="handlediv" title="Click to toggle">
+                                            <br />
+                                        </div>
+                                        <h3 class='hndle'>
+                                            <span>Cấu hình SEO cho bài viết</span></h3>
+                                        <div class="inside">
+                                            <label>
+                                                Title:</label>
+                                            <input name="SEOTitle" id="SEOTitle" onkeyup="CheckNum(this)" type="text" style="width: 85%; margin-left: 73px;" value="@Model.MetaTitle" />
+                                            <input id="TitleNum" type="text" style="width: 8%; margin-left: 102px; margin-top: 5px; background: #f3f3f3; text-align: center"
+                                                value="0" />
+                                            ký tự. Phần lớn search engine sử dụng tối đa <strong>60 ký tự</strong> cho title
+                                            <br />
+                                            <br />
+                                            <label>
+                                                <p style="width: 100px; float: left;">
+                                                    Description:
+                                                </p>
+                                            </label>
+                                            <textarea onkeyup="CheckNum(this)" style="width: 85%; outline: none" name="SEODescription"
+                                                id="SEODescription" cols="" rows="3">@Model.MetaDescription</textarea>
+                                            <input id="DesNum" type="text" style="width: 8%; margin-left: 102px; margin-top: 5px; background: #f3f3f3; text-align: center"
+                                                value="0" />
+                                            ký tự. Phần lớn search engine sử dụng tối đa <strong>160 ký tự</strong> cho Description<br />
+                                            <br />
+                                            <label>
+                                                Từ khóa:</label>
+                                            <input id="SEOKeyword" name="SEOKeyword" type="text" style="width: 85%; margin-left: 50px;" value="@Model.MetaKeyWord" />
+                                            <p style="margin-left: 100px;">
+                                                Các từ khóa ngăn cách nhau bằng dấu ","
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /post-body -->
+                        <br class="clear" />
+                    </div>
+                    <!-- /poststuff -->
+                </div>
+                <script type="text/javascript">
+                    try { document.post.title.focus(); } catch (e) { }
+                </script>
+                <div class="clear">
+                </div>
+            </div>
+            <!-- wpbody-content -->
+            <div class="clear">
+            </div>
+        </div>
+        <!-- wpbody -->
+        <div class="clear">
+        </div>
+    </div>
+    <div id="divGroupHTML" class="modal hide fade"></div>
+    <input type="hidden" id="hdfMobileContent" />
+    <div id="divPropValue" class="modal hide fade">
+        <div>
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>
+                    <span id="popTitle">THÊM MỚI VIDEO</span>
+                </h4>
+                <div class="clear">
+                </div>
+            </div>
+            <div style="overflow-y:scroll;overflow-x:hidden;height:460px">
+            <div class="maincontent">
+                <input type="hidden" id="hfVideoID" name="VideoID" value="0" />
+                <span class="post-title">Link youtube *</span><br />
+                <input type="text" id="txtVideoLink" name="VideoLink" style="width: 450px"/><br />
+                <span class="post-title">Chuyên mục video *</span><br />
+                <select id="cboVideoCategory" name="VideoCategory" multiple="multiple" size="4" style="width: 450px">
+                @foreach (var obj in ViewBag.ListCategoryVideo)
+                {
+                    <option value="@obj.CategoryID">@obj.CategoryName</option>
+                }
+                </select><br />
+                <span class="post-title">Hình đại diện (Nếu không muốn dùng của youtube)</span><br />
+                <input type="hidden" id="hfVideoImage" />
+                <input id="fuVideoImage" type="file" /><br />
+                <span class="post-title">Tiêu đề (Nếu không muốn dùng của youtube)</span><br />
+                <input type="text" id="txtVideoTitle" name="VideoTitle" style="width: 450px"/><br />
+                <span class="post-title">Mô tả ngắn (tối đa 300 ký tự)</span><br />
+                <textarea id="txtVideoDescription" name="VideoDescription" style="width: 450px;height:100px"></textarea><br />
+                <span class="post-title">Tin tức liên quan</span><br />
+                <input type="text" id="txtVideoNews" name="VideoNews" style="width: 450px" placeholder="Nhập ID cách nhau bằng dấu phẩy..."/><br />
+                <input type="hidden" id="hfVideoNews" name="hfVideoNews" />
+                <span id="spListNews"></span>
+                <span class="post-title">Từ khóa liên quan</span><br />
+                <input type="text" id="txtKeyword" name="VideoKeyword" style="width: 450px" placeholder="Nhập từ khóa cách nhau bằng dấu phẩy..."/><br />
+                <span class="post-title">Tiêu đề SEO</span><br />
+                <input type="text" id="txtMetaTitle" name="MetaTitle" style="width: 450px"/><br />
+                <span class="post-title">Từ khóa SEO</span><br />
+                <input type="text" id="txtMetaKeyword" name="MetaKeyword" style="width: 450px"/><br />
+                <span class="post-title">Mô tả SEO</span><br />
+                <textarea id="txtMetaDescription" name="MetaDescription" style="width: 450px;height:50px"></textarea><br />
+                <span class="post-title">Ngày xuất bản</span><br />
+                <input type="text" id="txtActivedDate" name="ActivedDate" style="width: 150px" class="datepicker"/><br />
+            </div>
+            <div class="clear"></div>
+            <div class="maincontent">
+                <div id="popMsg" style="color: red"></div>
+                <span class="post-title-ads">&nbsp;</span>
+                <input type="button" id="btnVideoNews" onclick="AddVideoToNews()" class="btn btn-primary" style="color:white" value="Đồng ý" />
+                <input type="button" onclick="CancelMesage()" class="btn" value="Hủy bỏ" />
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading hide">
+        Đang tải dữ liệu...
+    </div>
+    <!-- wpcontent -->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.8.11.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.news.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/ckeditor/ckeditor.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/datetimepicker/jquery.datetimepicker.js")"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".datepicker").datetimepicker({ format: 'm/d/Y H:i' });
+            $("input[name='PostType']").click(function () {
+                if ($(this).val() == 2)
+                    $("#divVideoPost").show();
+                else
+                    $("#divVideoPost").hide();
+            });
+
+            $(".selectit input[value=1169]").parent().hide();
+
+            $("#TitleCount").text($("#title").val().length);
+            $("#URLCount").text($("#spanUrl").text().length);
+            $("#DesNum").val($("#SEODescription").val().length);
+            $("#TitleNum").val($("#SEOTitle").val().length);
+            $('#ep_explain_more').hide();
+            $('#ep_toggle_more').click(function () {
+                jQuery('#ep_explain_more').toggle();
+                return false;
+            });
+
+            $("#divVideoPost").hide();
+            if($("input:radio[name='PostType']:checked").val() == 2)
+                $("#divVideoPost").show();
+            CKEDITOR.replace('content', {filebrowserImageUploadUrl: '@Url.Content("~/Scripts/uploadfile.ashx?user=" + ViewBag.UserName + "")&id=@ViewBag.NewsID&type=1'}).config.height = '500';
+            CKEDITOR.replace('shortdes').config.height = '100';
+
+            @if (ViewBag.Category != null && ViewBag.Category.Length > 0)
+            {
+                foreach (NewsCategoryBO objCate in ViewBag.Category)
+                {
+                @: $("input[name='NewsCate'][value='@objCate.CategoryID']").prop("checked", true);
+                                    }
+            }
+        });
+    </script>
+}

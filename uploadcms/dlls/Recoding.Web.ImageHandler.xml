@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Recoding.Web.ImageHandler</name>
+    </assembly>
+    <members>
+        <member name="T:Recoding.Crypto">
+            <summary>
+            Helper to manage Rijndael .NET algorythm
+            </summary>
+        </member>
+        <member name="M:Recoding.Crypto.Encrypt(System.String,System.String)">
+            <summary>
+            Encrypt a string with a symmetric algorythm, based on a password you define
+            </summary>
+            <param name="plainText">String to encrypt</param>
+            <param name="Password">String used by algorythm to make encryption</param>
+            <returns></returns>
+        </member>
+        <member name="M:Recoding.Crypto.Decrypt(System.String,System.String)">
+            <summary>
+            Decrypt a cipher text to retrieve the original plain text
+            </summary>
+            <param name="cipherText">Encrypted text</param>
+            <param name="Password">Password used for encrypt</param>
+            <returns></returns>
+        </member>
+        <member name="T:Recoding.Web.ImageHttpHandler">
+            <summary>
+            ASP.Net HttpHandler that wrap Recoding.Graphic extensions methods
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_IMAGEPATH">
+            <summary>
+            Path of the image to manipulate
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_DEFAULTIMAGEPATH">
+            <summary>
+            Path of the image to use if original image fails
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_ENCRYPTEDPARAMS">
+            <summary>
+            This parameter will have value only if the encryption is applied
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_WIDTH">
+            <summary>
+            New width of the image
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_HEIGHT">
+            <summary>
+            New height of the image
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_PROCESSTYPE">
+            <summary>
+            Select between available ProcessTypes
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_VERTICALALIGN">
+            <summary>
+            Vertical alignment in case of crop
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_HORIZONTALALIGN">
+            <summary>
+            Horizontal alignment in case of crop
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_CORNER_RADIUS">
+            <summary>
+            Corner radius (0 to disable it)
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_WATERMARKPATH">
+            <summary>
+            Path of watermark image
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_WATERMARKPOSITION">
+            <summary>
+            Position of watermark inside the viewport
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_CACHE">
+            <summary>
+            Enable/disable the cache
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_FLIPTYPE">
+            <summary>
+            Image flip type
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_IMAGEEFFECT">
+            <summary>
+            Effect to apply on image
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHttpHandler._PARAM_ROTATION">
+            <summary>
+            Rotation
+            </summary>
+        </member>
+        <member name="M:Recoding.Web.ImageHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Main handler method.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Recoding.Web.ImageHttpHandler.ProcessImage(System.Web.HttpContext)">
+            <summary>
+            Executes all the transformation needed for the image.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Recoding.Web.ImageHttpHandler.StreamOut(System.Windows.Media.Imaging.BitmapSource)">
+            <summary>
+            Puts the final image on the output stream
+            </summary>
+            <param name="image"></param>
+        </member>
+        <member name="M:Recoding.Web.ImageHttpHandler.CalculateImageSrc(System.String,System.Int32,System.Int32,Recoding.Graphics.ProcessTypes,Recoding.Graphics.VerticalAligns,Recoding.Graphics.HorizontalAligns,System.String,System.String,Recoding.Graphics.WatermarkPosition,System.Boolean,System.Boolean,System.Int32,Recoding.Graphics.FlipTypes,Recoding.Graphics.ImageEffects,Recoding.Graphics.RotationSteps)">
+            <summary>
+            Builds the src attribute to apply on img tag in order to call the ImageHttpHandler
+            </summary>
+            <param name="ImageUrl">Url of the image to process</param>
+            <param name="Width">Wanted width of the image</param>
+            <param name="Height">Wanted height of the image</param>
+            <param name="PType">Select between scale and crop process.</param>
+            <param name="VAlign">For cropped image, specify the vertical alignement of visible parts.</param>
+            <param name="HAlign">For cropped image, specify the horizontal alignement of visible parts.</param>
+            <param name="DefaultImageUrl">Fallback image if ImageUrl refers invalid path</param>
+            <param name="WatermarkUrl">Url of the watermark to apply on the image</param>
+            <param name="WPosition">Position of watermark in the visible area</param>
+            <param name="Encrypt">Specify if the request params must be encrypted, requires web.config section. See documentation for details</param>
+            <param name="EnableCaching">Specify if images must be cached after process. See documentation for details</param>
+            <param name="CornerRadius">Pixel radius of rounded corner, set to 0 to disable</param>
+            <param name="FType">Select a way to flip image</param>
+            <param name="ImageEffect">Select the effect to apply on image (after watermark, but before the round corner)</param>
+            <param name="Rotation">Select the amount of rotation</param>
+            <returns></returns>
+        </member>
+        <member name="P:Recoding.Web.ImageHttpHandler.IsReusable">
+            <summary>
+            IsReusable?
+            </summary>
+        </member>
+        <member name="T:Recoding.Web.ImageHandlerConfiguration">
+            <summary>
+            Custom configuration class
+            </summary>
+        </member>
+        <member name="F:Recoding.Web.ImageHandlerConfiguration._SECTIONNAME">
+            <summary>
+            Key used in the configuration file to store the custom settings
+            </summary>
+        </member>
+        <member name="M:Recoding.Web.ImageHandlerConfiguration.GetConfig">
+            <summary>
+            Reads the entire ImageHandlerConfiguration settings.
+            Just to explain: .NET will auto cache this reading, so there's no performance increase in the creation of a custom cache of the config section.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration.DefaultImageUrl">
+            <summary>
+            Reads from the configuration file what is the name of the default image
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration.encryptionSettings">
+            <summary>
+            Reads the encryption settings
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration.cacheSettings">
+            <summary>
+            Reads the cache settings
+            </summary>
+        </member>
+        <member name="T:Recoding.Web.ImageHandlerConfiguration_EncryptionSettings">
+            <summary>
+            Maps the encryptionSettings configuration settings
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration_EncryptionSettings.Password">
+            <summary>
+            Reads the password for symmetric encryption
+            </summary>
+        </member>
+        <member name="T:Recoding.Web.ImageHandlerConfiguration_CacheSettings">
+            <summary>
+            Maps the cacheSettings configuration settings
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration_CacheSettings.enabled">
+            <summary>
+            Reads if the caching is enabled
+            </summary>
+        </member>
+        <member name="P:Recoding.Web.ImageHandlerConfiguration_CacheSettings.minutes">
+            <summary>
+            Reads the minutes of cache
+            </summary>
+        </member>
+        <member name="T:Recoding.Convert.GenericConverter">
+            <summary>
+            Helper class to secure value retrieving
+            </summary>
+        </member>
+        <member name="M:Recoding.Convert.GenericConverter.TryGetValue``1(System.Object,System.Object)">
+            <summary>
+            Get a value from object casting it to a specific type, fall back to a default value if the conversion fails
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="p">Value to read</param>
+            <param name="defaultValue">Default value for conversion fails</param>
+            <returns></returns>
+        </member>
+        <member name="M:Recoding.Convert.GenericConverter.TryGetValue``1(System.Object,System.Object,System.IFormatProvider)">
+            <summary>
+            Get a value from object casting it to a specific type using  a FormatProvider for Globalization, fall back to a default value if the conversion fails
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="p">Value to read</param>
+            <param name="defaultValue">Default value for conversion fails</param>
+            <param name="fp">Culture specific format</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

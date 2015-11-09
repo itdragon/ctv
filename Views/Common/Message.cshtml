@@ -1,0 +1,20 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>.::Thông báo::.</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/load-styles.css")" type="text/css" media="all">
+</head>
+<body>
+    <center>
+        <div class="message-error">
+            @Html.Raw(ViewBag.Message)
+        </div>
+    </center>
+</body>
+</html>

@@ -1,0 +1,268 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+ <script src="../../Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>          
+       <script src="../../Scripts/bootstrap.min.js" type="text/javascript"></script>
+       <script src="../../Scripts/js.upload.js" type="text/javascript"></script>
+         <script src="../../Scripts/uploadify/swfobject.js" type="text/javascript"></script>
+        <script src="../../Scripts/uploadify/jquery.uploadify-3.1.min.js" type="text/javascript"></script>
+
+
+         <link href="../../Content/bootstrap.css" rel="stylesheet" type="text/css" />
+            <link href="../../Content/cmsupload.css" rel="stylesheet" type="text/css" />
+            <link href="../../Scripts/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+          
+
+       <button class="btn btn-primary"   onclick="cms_Uploadimage_Show()">Upload</button>
+
+     @*<div id="cms-uploadimage" class="modal hide fade in cms-upload-body-popup" style="display: none;">
+            <div class="modal-header" style=" background-color:black; padding-top:4px; height:17px">
+              <a id="cms-uploadimage-aclose"  class="cms-upload-close">×</a>
+              <h4 style="color:#D5D2CB; font-weight:normal">Upload Media</h4>
+            </div>
+          <div class="modal-body">
+              <ul id="tab" class="cms-tab nav nav-tabs">
+                  <li class="active"><a href="#hinhanh" data-toggle="tab">Upload hình ảnh</a></li>
+                  <li><a href="#hinhgoccanh" data-toggle="tab">Hình góc cạnh (<span id="cms_uploadimage_spcounthgc">0</span>) </a></li>
+                  <li><a href="#hinhxoay" data-toggle="tab">Hình xoay 360 (<span id="cms_uploadimage_spcounth360">0</span>) </a></li>
+                    <li><a href="#video" data-toggle="tab">Video (<span id="cms_uploadimage_spcountvideo">0</span>) </a></li>
+                    <li><a href="#gallery" data-toggle="tab">Gallery(<span id="cms_uploadimage_spcountgallery">0</span>) </a></li>
+              </ul>
+              <div id="myTabContent" class="tab-content">
+                  <div class="tab-pane fade cms_dv_scroll in active" id="hinhanh">
+                    <h4 class="cms-upload-title">Upload hình từ máy tính của bạn</h4>
+                     <p style="text-align:center;padding-left:243px;"><input type="file" id="file_upload" name="file_upload" class="cms-upload-btn" value="Chọn file"  />                     
+                     </p>
+                 
+                     <script type="text/javascript">
+                         LoadImageHsp(1);
+                         var dest = "";
+                          $(function() {
+                             $('#file_upload').uploadify({
+                                 'buttonClass': 'cms-upload-btn',
+                                 'buttonText': 'Chọn file',
+                                 'height': 16,
+                                 'width': 67,
+                                 'fileSizeLimit': '8192KB',
+                                 'swf': '@Url.Content("~/Scripts/uploadify/uploadify.swf")',
+                                 'uploader': '@Url.Content("~/uploadify.ashx?siteid=0&categoryid=0&productid=0&flag=1")',
+                                 'onUploadComplete': function (file) {
+                                     LoadImageHsp(1);
+                                 }
+                             });
+
+                         });
+
+
+                    
+                         </script>
+                         <div id="dvtableimage_ha">
+                         <p>Kích thước tối đa: 8MB. Sau khi hình ảnh được upload, bạn có thể sửa tiêu đề và mô tả của hình</p>
+                         
+                        
+
+                             <div id="cms_dvhinh" class="media-items" style="width:620px">
+                             
+                             </div>
+
+
+
+                         </div>
+                  </div>
+                  <div class="tab-pane fade cms_dv_scroll" id="hinhgoccanh">
+                  <h4 class="cms-upload-title">Upload hình góc cạnh</h4>
+                  <p id="media-search" class="search-box">
+	
+    <script type="text/javascript">
+        cms_Uploadimage_LoadColordv();
+    </script>
+  
+  <select id="cms_dv_selectcolor_hinhgoccanh" onchange="cms_ddcolor_change('cms_dv_selectcolor_hinhgoccanh','cms_dv_btnupload_hinhgoccanh')" style="float:left">
+  <option value="-1">Chọn màu</option>  
+    </select>
+
+    <div style="float:left;margin-left:28px;display:none" id="cms_dv_btnupload_hinhgoccanh"><input type="file" id="cms_uploadhinhgoccanh_btn" name="file_upload" class="cms-upload-btn" value="Chọn file" /> </div> 
+    <script type="text/javascript">
+        LoadImageHgc();
+        $(function () {
+            $('#cms_uploadhinhgoccanh_btn').uploadify({
+                'buttonClass': 'cms-upload-btn',
+                'buttonText': 'Chọn file',
+                'height': 16,
+                'width': 67,
+                'fileTypeDesc': 'Image Files',
+                'fileTypeExts': '*.gif; *.jpg; *.png; *.jpeg; *.bmp',               
+                'fileSizeLimit': '8192KB',
+                'swf': '@Url.Content("~/Scripts/uploadify/uploadify.swf")',
+                'uploader': '@Url.Content("~/uploadify.ashx?siteid=1&categoryid=42&productid=23130&user=administrator&colorid=2&flag=2")',
+                'onUploadComplete': function (file) {
+                    LoadImageHgc();
+                }
+            });
+
+        });
+    </script>
+
+	</p>
+
+                      <div class="clr"></div>
+                      <div id="cms_content_hinhgoccanh" style="display:none">
+                      <div id="sort-buttons" class="hide-if-no-js">
+                        Các mầu đang có: <span style="color:#08C;" id="cms_upload_image_listcolorcurrent">Vàng | 
+                                  Xanh | Đỏ</span>
+                      </div>
+                      <div style="margin-top:20px">
+                      <div  class="widefat">
+                      <table style="width:618px">
+                          <thead>
+                              <tr>
+                                  <th style="text-align:left;padding-left: 10px; width:64%">
+                                      Media
+                                  </th>
+                                  
+                                  <th style="text-align:left">
+                                      Màu
+                                  </th>
+                              </tr>
+                          </thead>
+                      </table>
+                      </div>
+                      <div id="cms_dvhinhgoccanh" class="media-items" style="width:620px">
+                             
+                     
+                      </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                    <div class="tab-pane fade cms_dv_scroll" id="hinhxoay">
+                      <h4 class="cms-upload-title">Upload hình 360</h4>
+                  <p id="media-search" class="search-box">
+	
+    <p style="text-align:center;padding-left:243px;">
+    <input type="file" id="cms_uploadhinh360_btn" name="file_upload" class="cms-upload-btn" value="Chọn file" /> 
+        </p>
+  
+    <script type="text/javascript">
+        LoadImage360();
+        $(function () {
+            $('#cms_uploadhinh360_btn').uploadify({
+                'buttonClass': 'cms-upload-btn',
+                'buttonText': 'Chọn file',
+                'height': 16,
+                'width': 67,
+                'fileTypeDesc': 'Image Files',
+                'fileTypeExts': '*.gif; *.jpg; *.png; *.jpeg; *.bmp',
+                'fileSizeLimit': '8192KB',
+                'swf': '@Url.Content("~/Scripts/uploadify/uploadify.swf")',
+                'uploader': '@Url.Content("~/uploadify.ashx?siteid=1&categoryid=42&productid=23130&user=administrator&colorid=2&flag=3")',
+                'onUploadComplete': function (file) {
+                    LoadImage360();
+                }
+            });
+
+        });
+    </script>
+
+	</p>
+
+                      <div class="clr"></div>
+                      <div id="cms_content_hinh360" style="display:none">
+                    
+                      <div style="margin-top:20px">
+                      <div  class="widefat">
+                      <table style="width:618px">
+                          <thead>
+                              <tr>
+                                  <th style="text-align:left;padding-left: 10px; width:82%">
+                                      Media
+                                  </th>
+                                  
+                                  <th style="text-align:left">
+                                      DisplayOrder
+                                  </th>
+                              </tr>
+                          </thead>
+                      </table>
+                      </div>
+                      <div id="cms_dvhinh360" class="media-items" style="width:620px">
+                             
+                     
+                      </div>
+                      </div>
+                    </div>
+
+                  </div>
+                    <div class="tab-pane fade cms_dv_scroll" id="video" >
+                
+                     <div class="cms_uploadvideo_link">
+                    <div class="cms_uploadvideo_title_left"> <div class="img"></div></div>
+                    <div class="cms_uploadvideo_title_right" > <input type="text" class="cms-upload-text-video" id="cms_uploadimage_video_linkyoutube" /> </div>
+                    </div>
+                    <div class="cms_uploadvideo_title">
+                    <div class="cms_uploadvideo_title_left"> Tiêu đề:</div>
+                    <div class="cms_uploadvideo_title_right" > <input type="text" id="cms_uploadimage_video_title" class="cms-upload-text-video" /> </div>
+                    </div>
+                     <div class="cms_uploadvideo_title">
+                    <div class="cms_uploadvideo_title_left"> Mã Html:</div>
+                    <div class="cms_uploadvideo_title_right" > <textarea cols="50" rows="2" id="cms_uploadimage_video_mahtml"  class="cms-upload-textarea-video" ></textarea> </div>
+                    </div>
+                    <div>
+                       <div class="cms_uploadvideo_title_left">Link hình đại diện:</div>
+                    <div class="cms_uploadvideo_title_right" >  <input type="text" id="cms_uploadimage_video_linkimgyoutube" class="cms-upload-text-video" /> </div>
+                    </div>
+                     <div>
+                       <div class="cms_uploadvideo_title_left">Thứ tự hiển thị:</div>
+                    <div class="cms_uploadvideo_title_right" >  <input type="text" id="cms_uploadimage_video_orderindex" style="width:10px;height:10px" /> </div>
+                    </div>
+                    <div class="cms_uploadvideo_button">
+                    <input type="button" id="cms_uploadVideo_btn" class="cms-upload-btn_video" onclick="cms_uploadimage_videoclick()" value="Lưu" style="width:74px;" />                   
+                   
+                    </div>
+                    <br />
+                    <div class="clr"></div>
+                    <script type="text/javascript">
+                        LoadVideo();
+                    </script>
+                    
+                    <div id="cms_dvvideo" style="width:620px">
+                     
+                       <div class="clr"></div>
+                        
+                    </div>  
+                  </div>
+
+                   <div class="tab-pane fade cms_dv_scroll" id="gallery">
+                   
+                   
+                     <script type="text/javascript">
+                         LoadImageHspGallery(4);
+                    
+                         </script>
+                        
+                        <p></p>
+                       
+                             <div id="cms_dvgallery" class="media-items" style="width:620px">
+                             
+                             </div>
+
+
+
+                        
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+         
+          </div>
+          </div>*@
+
+
+<div id="dvtextcontent">
+
+
+</div>

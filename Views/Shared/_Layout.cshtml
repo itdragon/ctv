@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="http://www.thegioididong.com/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @if (IsSectionDefined("INC_META"))
+    {
+        @RenderSection("INC_META")
+    }
+    <script type="text/javascript">
+        var rootPath = "/ctv";
+    </script>
+    @if (IsSectionDefined("INC_CSS"))
+    {
+        @RenderSection("INC_CSS")
+    }
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.min.css")" type="text/css">
+    <link rel="stylesheet" href="@Url.Content("~/Content/base-admin.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Content/base-admin-responsive.css")"/>
+    <link rel="stylesheet" href="@Url.Content("~/Content/load-styles.css")" type="text/css" media="all">
+    <link rel="stylesheet" href="@Url.Content("~/Content/colors-fresh.css")" type="text/css" media="all">
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" type="text/css" />
+    @if (IsSectionDefined("INC_JS"))
+    {
+        @RenderSection("INC_JS")
+    }
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.11.1.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+</head>
+<body class="wp-admin no-js  post-new-php admin-bar branch-3-4 version-3-4-2 admin-color-fresh locale-en-us no-customize-support">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#">
+                    <img src="@Url.Content("~/Content/images/the-gioi-di-dong.png")" width="225" height="42" title="thế giới di động"
+                        alt="the-gioi-di-dong" />
+                </a>
+                <div class="nav-collapse">
+                    @Html.Action("HeaderUserInfo", "Common")
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="wpwrap">
+        @RenderBody()
+    </div>
+    <div class="clear">
+    </div>
+    <div class="clear">
+    </div>
+    <div style="background: #202020; text-align: center; color: white; overflow: hidden;padding:10px">
+        <p>
+            <span id="footer-thankyou">© thegioididong.com, bảo lưu mọi quyền. Công ty CP Thế Giới Di Động </span>
+        </p>
+    </div>
+</body>
+</html>
+

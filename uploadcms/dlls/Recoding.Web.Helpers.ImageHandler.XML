@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Recoding.Web.Helpers.ImageHandler</name>
+    </assembly>
+    <members>
+        <member name="T:Recoding.Web.Helpers.ImageHandlerExtensions">
+            <summary>
+            MVC HtmlHelper for building calls to Recoding.Web.ImageHttpHandler
+            </summary>
+        </member>
+        <member name="M:Recoding.Web.Helpers.ImageHandlerExtensions.ImageHandlerMVC(System.Web.Mvc.HtmlHelper,System.String,System.Int32,System.Int32,Recoding.Graphics.ProcessTypes,Recoding.Graphics.VerticalAligns,Recoding.Graphics.HorizontalAligns,System.String,System.String,Recoding.Graphics.WatermarkPosition,System.Boolean,System.Boolean,System.Int32,Recoding.Graphics.FlipTypes,Recoding.Graphics.ImageEffects,Recoding.Graphics.RotationSteps,System.String,System.String,System.String,System.String)">
+            <summary>
+            Writes an img tag that links the imghandler for on-the-fly image manipulation
+            </summary>
+            <param name="helper"></param>
+            <param name="ImageUrl">Url of the image to process</param>
+            <param name="Width">Target width of the image</param>
+            <param name="Height">Target height of the image</param>
+            <param name="ProcessType">Select between scale and crop process</param>
+            <param name="VerticalAlign">For cropped image, specify the vertical alignement of visible parts</param>
+            <param name="HorizontalAlign">For cropped image, specify the horizontal alignement of visible parts</param>
+            <param name="DefaultImageUrl">Fallback image if ImageUrl refers invalid path</param>
+            <param name="WatermarkUrl">Url of the watermark to apply on the image</param>
+            <param name="WatermarkPosition">Position of watermark in the visible area</param>
+            <param name="EncryptUrls">Specify if the Urls of images must be encrypted, requires we.config section. See documentation for details</param>
+            <param name="EnableCaching">Specify if images must be cached after process. See documentation for details</param>
+            <param name="CornerRadius">Pixel radius of rounded corner, set to 0 to disable</param>
+            <param name="FlipType">Specify the flip type to apply on the image</param>
+            <param name="ImageEffect">Specify the effect to apply on the image</param>
+            <param name="Rotate">Specify the amount of rotation to apply</param>
+            <param name="AlternateText">Alternate text if image won't work</param>
+            <param name="ToolTip">Tooltip to shown on mouseover</param>
+            <param name="CssClass">Css class to apply on img tag</param>
+            <param name="Style">A string that repersents the additional css style to append to the img tag.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" itemscope itemtype="http://schema.org/Article">
+<head profile="http://gmpg.org/xfn/11">
+
+  
+    @if (IsSectionDefined("META_INC"))
+    {
+        @RenderSection("META_INC")
+    }
+
+    <link rel="publisher" href="https://plus.google.com/u/0/104496008508234446208" />
+    <meta name="RATING" content="GENERAL" />
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="INDEX,FOLLOW" name="robots" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="copyright" content="Công ty Cổ phẩn Thế Giới Di Động" />
+    <meta name="author" content="Công ty Cổ phẩn Thế Giới Di Động" />
+    <meta http-equiv="audience" content="General" />
+    <meta name="resource-type" content="Document" />
+    <meta name="distribution" content="Global" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="GENERATOR" content="Công ty Cổ phần Thế Giới Di Động" />
+    <link href="http://www.thegioididong.com/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Thegioididong.com" />
+    <meta property="og:locale" itemprop="inLanguage" content="vi_VN" />
+    @if (IsSectionDefined("CSS_INC"))
+    {
+       
+        <link rel="stylesheet" href="@Url.Content("~/Content/home.news.min.css")" type="text/css" />        
+        <!-- Google Webfonts -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic|Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css' />
+        <link href="http://cdn.tgdd.vn/v2013/Content/jquery.fancybox.css" rel="Stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="http://cdn.tgdd.vn/v2013/Content/jquery.fancybox-buttons.css" />
+        @RenderSection("CSS_INC")
+    }
+    @if (IsSectionDefined("JS_INC"))
+    {
+        <script src="~/Scripts/MicrosoftAjax.js"></script>
+        <script src="~/Scripts/jquery/jquery-1.8.3.min.js"></script>
+        <script src="~/Scripts/jquery.form.js"></script>
+         <script src="~/Scripts/jquery.html5uploader.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script src="~/Scripts/jquery.lazyload.js"></script>
+        <script src="~/Scripts/login.js?v=@(cms.business.ConfigHelper.StaticContentVersion())"></script>
+        <script src="~/Scripts/jquery.mCustomScrollbar.concat.min.js"></script>
+      
+        <script type="text/javascript" src="http://cdn.tgdd.vn/v2013/Scripts/jquery.fancybox.js"></script>
+        <script type="text/javascript" src="http://cdn.tgdd.vn/v2013/Scripts/jquery.fancybox-buttons.js"></script>
+      
+        @RenderSection("JS_INC")
+    }
+
+    <!-- GA -->
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-918185-25']);
+        _gaq.push(['_setDomainName', '.thegioididong.com']);
+        _gaq.push(['_trackPageview']);
+        _gaq.push(['_setAccount', 'UA-918185-9']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- Google Analytics Social Button Tracking -->
+    <script src="http://cdn.tgdd.vn/v2013/Scripts/ga_social_tracking.js"></script>
+    <script type="text/javascript">
+        var tmp = document.URL;
+        if ('https:' == document.location.protocol)
+            document.location.href = 'http' + tmp.replace('https', '');
+    </script>
+</head>
+<body>
+      <div class="breadcrumb clearfix">
+                <a href="/" title="Trang chủ">Trang chủ</a><span class="nv">&gt;</span>
+                 <a href="@System.Configuration.ConfigurationManager.AppSettings["root"].ToString()" class="cur" title="Tin tức">Cộng tác viên</a> 
+               @if (IsSectionDefined("SITE_MAP"))
+               {
+                   @RenderSection("SITE_MAP")
+               }
+            </div>
+    <div id="site-wrapper" class="container align-center clearfix">
+      
+        
+        <div id="site-body" class="inside-page-body news-body clearfix">
+            <div class="main news-main main-borv2">
+                <div class="news-list-wrapper clearfix">
+                    <div class="clearfix"></div>
+                    @RenderSection("featured", required: false)
+                    @RenderBody()
+                   @*Menu Bên trái*@
+                </div>
+            </div>
+        </div>
+
+      
+    </div>
+       @Html.Action("Header", "Common")
+     @Html.Action("Footer", "Common")
+   
+    <!-- Set province's user -->
+
+
+    <!-- Google Code for Remarketing tag -->
+    <!-- Remarketing tags may not be associated with personally identifiable information or placed on pages related to sensitive categories. For instructions on adding this tag and more information on the above requirements, read the setup guide: google.com/ads/remarketingsetup -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 947481767;
+        var google_conversion_label = "_GxDCKnh6wQQp9nlwwM";
+        var google_custom_params = window.google_tag_params;
+        var google_remarketing_only = true;
+        /* ]]> */
+    </script>
+ 
+    @*<script src="/cong-tac-vien/Scripts/newscommon.min.js?v=@(cms.business.ConfigHelper.StaticContentVersion())"></script>*@
+
+
+</body>
+</html>
